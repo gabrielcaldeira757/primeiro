@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
-
+import Firebird, {db, options } from 'node-firebird'
 
 class FormLocacao extends Component{
   constructor(props){
@@ -23,32 +23,70 @@ class FormLocacao extends Component{
     }
   }
 
+
   handleSave = (event) => {
-    // Pegar o input dos campos, formar um objeto e inserir no banco
-    const genero = {
-      name: this.state.nGenero,
-      descricao: this.state.descricao
+   
+     // Pegar o input dos campos, formar um objeto e inserir no banco
+     const genero = {
+      cliente: this.state.cliente,
+      telefone: this.state.telefone,
+      dataloc: this.state.dataloc,
+      datadev: this.state.datadev,
+      listajogos: this.state.dataloc,
+      valorpag: this.state.valorpag,
     }
+    
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(
+        `INSERT INTO LOCACAO 
+        (CLIENTE, TELEFONE, DATALOC, DATADEV, LISTAJOGOS, VALORPAG) 
+        VALUES(${this.state.cliente} , ${this.state.telefone}, ${this.state.dataloc} , ${this.state.datadev}, ${this.state.listajogos}, ${this.state.valorpag})  `
+        , function(err, result) {
+          db.detach();
+      });
+   
+    });
+    
+   
   }
 
   handlePesquisa() {
-    // result = firebird.query(
-    //   `SELECT NAME, DESCRICAO FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`
-    // )
-    // BUSCA DO BANCO OS VALORES RELATIVOS AO ID
-
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(`SELECT * FROM LOCACAO WHERW LOCACAO.IDLOCACAO = ${this.state.pesquisa}`, function(err, result) {
+          db.detach();
+      });
+   
+    });
+    //Pega resultados do banco e coloca nas variaveis de estado
     this.setState({
-      // descricao: result.descricao,
-      // nGenero: result.nGenero,
-      descricao: this.state.pesquisa,
-      nGenero: this.state.pesquisa,
+      cliente: result.cliente,
+      telefone: result.telefone,
+      dataloc: result.dataloc,
+      datadev: result.datadev,
+      listajogos: result.dataloc,
+      valorpag: result.valorpag,
     });
   }
 
   handleExcluir() {
-    // firebird.query(
-    //   `DELETE FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`;
-    // )
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(`DELETE FROM LOCACAO WHERE LOCACAO.IDLOCACAO = ${this.state.pesquisa}`, function(err, result) {
+          db.detach();
+      });
+   
+    });
   }
 
   handleSubmit = (event) => {

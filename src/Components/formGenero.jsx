@@ -24,29 +24,51 @@ class FormGenero extends Component{
       name: this.state.nGenero,
       descricao: this.state.descricao
     }
-
-    // INSERE NO BANCO
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(`INSERT INTO GENERO (DESCRICAO, NGENERO) VALUES(${this.state.descricao} , ${this.state.nGenero})  `, function(err, result) {
+          db.detach();
+      });
+   
+    });
     console.log(genero);
   }
 
   handlePesquisa() {
-    // result = firebird.query(
-    //   `SELECT NAME, DESCRICAO FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`
-    // )
-    // BUSCA DO BANCO OS VALORES RELATIVOS AO ID
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      
+      db.query(`SELECT * FROM GENERO WHERW GENERO.IDGENERO = ${this.state.pesquisa}`, function(err, result) {
+          db.detach();
+      });
+   
+    });
 
     this.setState({
-      // descricao: result.descricao,
-      // nGenero: result.nGenero,
-      descricao: this.state.pesquisa,
-      nGenero: this.state.pesquisa,
+      descricao: result.descricao,
+      nGenero: result.nGenero,
     });
   }
 
   handleExcluir() {
-    // firebird.query(
-    //   `DELETE FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`;
-    // )
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+     
+      db.query(`DELETE FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`, function(err, result) {
+          db.detach();
+      });
+   
+    });
+    
   }
 
   handleChange(event) {

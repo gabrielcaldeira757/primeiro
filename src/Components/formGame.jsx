@@ -25,7 +25,7 @@ class FormGame extends Component{
     // Pegar o input dos campos, formar um objeto e inserir no banco
     const genero = {
       titulo: this.state.titulo,
-      sinope: this.state.sinope,
+      sinopse: this.state.sinopse,
       quantJoga: this.state.quantJoga,
       valor: this.state.valor,
       //Selecionar genero no banco
@@ -33,32 +33,58 @@ class FormGame extends Component{
       pesquisa: this.state.pesquisa,
     }
 
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(
+        `INSERT INTO GAME 
+        (TITULO, SINOPSE, QUANTJOGA, VALOR, GENERO) 
+        VALUES(${this.state.titulo} , ${this.state.sinopse}, ${this.state.quantJoga} , ${this.state.valor}, ${this.state.genero})  `
+        , function(err, result) {
+          db.detach();
+      });
+   
+    });
+
     // INSERE NO BANCO
     console.log(genero);
   }
 
   handleExcluir() {
-    // firebird.query(
-    //   `DELETE FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`;
-    // )
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(`DELETE FROM GAMES WHERE GAMES.IDGAME = ${this.state.pesquisa}`, function(err, result) {
+          db.detach();
+      });
+   
+    });
   }
  
   handlePesquisa() {
-    // result = firebird.query(
-    //   `SELECT NAME, DESCRICAO FROM GENERO WHERE GENERO.ID = ${this.state.pesquisa}`
-    // )
-    // BUSCA DO BANCO OS VALORES RELATIVOS AO ID
+    Firebird.attach(options, function(err, db) {
+ 
+      if (err)
+          throw err;
+   
+      db.query(`SELECT * FROM GAMES WHERW GAMES.IDGAME = ${this.state.pesquisa}`, function(err, result) {
+          db.detach();
+      });
+   
+    });
 
     this.setState({
-      // descricao: result.descricao,
-      // nGenero: result.nGenero,
-      titulo: this.state.titulo,
-      sinope: this.state.sinope,
-      quantJoga: this.state.quantJoga,
-      valor: this.state.valor,
+      titulo: result.titulo,
+      sinope: result.sinope,
+      quantJoga: result.quantJoga,
+      valor: result.valor,
       //Selecionar genero no banco
-      genero: this.state.genero,
-      pesquisa: this.state.pesquisa,
+      genero: result.genero,
+      pesquisa: result.pesquisa,
     });
   }
 
