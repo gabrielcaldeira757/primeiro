@@ -1,0 +1,37 @@
+create database `C:\Users\Gabriel\primeiro\BD\BANDOLOCADORES.FDB` user `SYSDBA` password `masterkey`;
+CONNECT `bancoLocadora` ;
+
+
+CREATE TABLE Genero (
+  idGenero INT NOT NULL,
+  Descricao VARCHAR(45),
+  PRIMARY KEY idGenero)
+;
+
+
+CREATE TABLE Games (
+  idGames INT NOT ,
+  titulo VARCHAR(45) ,
+  quantjoga INT ,
+  valor FLOAT ,
+  Genero_idGenero INT NOT NULL,
+  Alugado INT ,
+  PRIMARY KEY (idGames),
+    FOREIGN KEY (Genero_idGenero)
+    REFERENCES Genero (idGenero))
+;
+
+CREATE TABLE Locacao (
+  idLocacao INT NOT NULL,
+  cliente VARCHAR(45) ,
+  telefone VARCHAR(45) ,
+  dataloc DATE ,
+  datadev DATE ,
+  valorpag FLOAT ,
+  Games_idGames INT NOT NULL,
+  PRIMARY KEY (idLocacao),
+    FOREIGN KEY (Games_idGames)
+    REFERENCES Games (idGames))
+;
+
+
